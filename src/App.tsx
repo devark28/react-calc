@@ -45,7 +45,7 @@ function App() {
                         setValue(old => ({...old, num: Number(e.target.value)}));
                     }
                 }} autoFocus hidden disabled/>
-                <div className='w-full h-16 py-4 px-3 text-5xl text-end outline-none text-white'>
+                <div className='w-full h-18 py-4 px-3 text-5xl text-end outline-none text-white'>
                     {isDecimal && !value.toString().includes('.') ? value.toString() + '.' : value}
                 </div>
                 <div className='grid grid-cols-4 grid-rows-5 h-full w-full bg-[#7A7B86] gap-[1px] text-3xl font-medium'>
@@ -64,7 +64,10 @@ function App() {
                     }}>+/-
                     </button>
                     <button className='bg-[#DBDBDB] order-3' onClick={() => {
-                        // setValue(val => -1 * val)
+                        setValue(val => ({num: 100 * val.num, isDecimal: false}))
+                        if(operator == null && right == null) {
+                            setOperands([100 * value, right]);
+                        }
                     }}>%
                     </button>
                     {operations.map(operation => (
@@ -74,7 +77,7 @@ function App() {
                                     if (left == null) {
                                         setOperands([value, null]);
                                         setValueStored(true);
-                                    } else if (right == null && operator != null) {
+                                    } else if (right == null && operator != null && !valueStored) {
                                         setOperands([operation.func(left, value), null]);
                                         setValueStored(true);
                                     }
@@ -100,7 +103,7 @@ function App() {
                     }}>.
                     </button>
                     <button className='bg-[#F38636] text-white order-19' onClick={() => {
-                        if (left !== null && right == null && operator != null) {
+                        if (left !== null && right == null && operator != null && !valueStored) {
                             setValue(old => ({...old, num: operator.func(left, value)}));
                             setOperands([operator.func(left, value), null]);
                             setOperator(null);
